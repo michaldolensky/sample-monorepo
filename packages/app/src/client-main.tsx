@@ -4,22 +4,19 @@ import { App } from './app';
 import 'sanitize.css';
 import 'sanitize.css/typography.css';
 
-const container = upsertContainer();
+const rootContainerId = 'SITE_MAIN';
+
+const container = document.getElementById(rootContainerId) ?? createContainer(document.body);
 
 if (container.hasAttribute('data-ssr')) {
-    hydrate(<App text="Hello World (hydrated)" />, container);
+  hydrate(<App text="Hello World (hydrated)" />, container);
 } else {
-    render(<App text="Hello World (client-only)" />, container);
+  render(<App text="Hello World (client-only)" />, container);
 }
 
-function upsertContainer(): HTMLElement {
-    const existingContainer = document.getElementById('SITE_MAIN');
-    if (existingContainer) {
-        return existingContainer;
-    } else {
-        const newContainer = document.createElement('div');
-        newContainer.id = 'SITE_MAIN';
-        document.body.appendChild(newContainer);
-        return newContainer;
-    }
+function createContainer(targetParent: Element) {
+  const newContainer = document.createElement('div');
+  newContainer.id = rootContainerId;
+  targetParent.appendChild(newContainer);
+  return newContainer;
 }
